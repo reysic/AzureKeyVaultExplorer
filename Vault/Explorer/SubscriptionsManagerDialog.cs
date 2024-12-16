@@ -205,10 +205,10 @@ namespace Microsoft.Vault.Explorer
         // https://azure.microsoft.com/en-us/documentation/articles/guidance-naming-conventions/
         private static Regex s_resourceNameRegex = new Regex(@".*\/resourceGroups\/(?<GroupName>[a-zA-Z0-9_\-\.]{1,64})\/", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-        public readonly Microsoft.Azure.Management.KeyVault.Models.Vault Vault;
+        public readonly Microsoft.Azure.Management.KeyVault.Models.Resource Vault;
         public readonly string GroupName;
 
-        public ListViewItemVault(Microsoft.Azure.Management.KeyVault.Models.Vault vault) : base(vault.Name)
+        public ListViewItemVault(Microsoft.Azure.Management.KeyVault.Models.Resource vault) : base(vault.Name)
         {
             Vault = vault;
             Name = vault.Name;
@@ -305,7 +305,7 @@ namespace Microsoft.Vault.Explorer
         public Guid? ApplicationId => _ape.ApplicationId;
 
         [Description("Object ID of the principal")]
-        public Guid ObjectId => _ape.ObjectId;
+        public Guid ObjectId => Guid.Parse(_ape.ObjectId);
 
         [Description("Permissions to keys")]
         public string PermissionsToKeys => string.Join(",", _ape.Permissions.Keys ?? EmptyList);

@@ -185,7 +185,7 @@ function New-NuGetPackagePropertyFile(
 function Get-PackagesConfigFingerPrintIfChanged
 {
     # obtain the fingerprint of the packages.config
-    $fpPackagesConfig = (Get-FileHash "$PSScriptRoot\packages.config" -Algorithm MD5).Hash
+    $fpPackagesConfig = (Get-FileHash "$PSScriptRoot\..\Vault\Explorer\packages.config" -Algorithm MD5).Hash
     # return the fingerprint in case packages.props doesn't exist
     if (-not (Test-Path $nuGetPackagePropertyFile -PathType Leaf))
     {
