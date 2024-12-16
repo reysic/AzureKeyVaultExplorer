@@ -32,8 +32,8 @@
   </PropertyGroup>
 
   <!-- Import (generated) NuGet package properties -->
-  <Import Project="$(RepositoryRoot)\.packages\Packages.props" 
-    Condition="Exists('$(RepositoryRoot)\.packages\Packages.props')"/>
+  <Import Project="$(RepositoryRoot)\packages\Packages.props" 
+    Condition="Exists('$(RepositoryRoot)\packages\Packages.props')"/>
 
   <!-- Import repository custom properties (if any) -->
   <Import Project="$(RepositoryRoot)\Environment.Custom.props" 
@@ -56,7 +56,7 @@
           public override bool Execute()
           {
               // Load the current fingerprint, if any
-              var fpFileName = Path.Combine(RepositoryRoot, @".packages\.fingerprint");
+              var fpFileName = Path.Combine(RepositoryRoot, @"packages\.fingerprint");
 
               var fpCurrent = string.Empty;
 

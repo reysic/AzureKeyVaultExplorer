@@ -16,7 +16,7 @@ $nuGetExe = (Join-Path $PSScriptRoot nuget\nuget.exe)
 $nuGetCfg = (Join-Path $PSScriptRoot nuget\nuget.config)
 
 # NuGet (restored) packages root
-$nuGetPackageRoot = Join-Path $PSScriptRoot '..\.packages'
+$nuGetPackageRoot = Join-Path $PSScriptRoot '..\packages'
 
 if (-not (Test-Path $nuGetPackageRoot -PathType Container))
 {
@@ -118,7 +118,7 @@ function New-NuGetPackagePropertyFile(
         $xw.WriteStartElement("PropertyGroup", $ns);
         
         $xw.WriteComment(" Packages root ");
-        $xw.WriteElementString("PackagesRoot", $ns, '$(RepositoryRoot)\.packages');
+        $xw.WriteElementString("PackagesRoot", $ns, '$(RepositoryRoot)\packages');
         $xw.WriteComment(" Packages sorted by name and version ");
     }
 

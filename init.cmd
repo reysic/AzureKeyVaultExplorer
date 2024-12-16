@@ -35,7 +35,7 @@ REM NuGet push macro
 REM
 doskey nugetpush=%~dp0.init\nuget\nugetpush.cmd
 
-set NUGET_CREDENTIALPROVIDERS_PATH=%~dp0.packages
+set NUGET_CREDENTIALPROVIDERS_PATH=%~dp0packages
 
 REM 
 REM Invoke the main initialization script
