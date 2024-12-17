@@ -4,6 +4,7 @@ PackageRoot/*
 **/.vs/*
 **/bin/*
 **/obj/*
+**/publish/*
 msbuild.log
 *.user
 *.trace
