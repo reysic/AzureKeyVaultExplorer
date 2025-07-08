@@ -1,19 +1,24 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Library
 {
-    using Core;
-    using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Security.Cryptography.X509Certificates;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Identity.Client;
+    using Microsoft.Vault.Core;
+    using Newtonsoft.Json;
 
     [JsonObject]
     public abstract class VaultAccess
     {
+        private static readonly SemaphoreSlim _authSemaphore = new SemaphoreSlim(1, 1);
+
         [JsonProperty]
         public readonly string ClientId; // Also known as ApplicationId, see Get-AzureRmADApplication
 
@@ -27,32 +32,53 @@ namespace Microsoft.Vault.Library
             {
                 throw new ArgumentException($"{clientId} must be a valid GUID in the following format: 00000000-0000-0000-0000-000000000000", nameof(clientId));
             }
-            ClientId = clientId;
-            Order = order;
+
+            this.ClientId = clientId;
+            this.Order = order;
         }
 
-        protected abstract AuthenticationResult AcquireTokenInternal(AuthenticationContext authenticationContext, string resource, string userAlias = "");
+        protected abstract Task<AuthenticationResult> AcquireTokenInternalAsync(string[] scopes, string userAlias = "");
 
-        public AuthenticationResult AcquireToken(AuthenticationContext authenticationContext, string resource, string userAlias="")
+        public async Task<AuthenticationResult> AcquireTokenAsync(string[] scopes, string userAlias = "")
         {
-            // first, try to get a token silently
-            if (authenticationContext.TokenCache != null)
+            await _authSemaphore.WaitAsync();
+            try
             {
                 try
                 {
-                    return authenticationContext.AcquireTokenSilentAsync(resource, ClientId).GetAwaiter().GetResult();
+                    // First, try to get a token silently
+                    return await this.AcquireTokenSilentAsync(scopes, userAlias);
                 }
-                catch (AdalException ex)
+                catch (MsalUiRequiredException)
                 {
-                    // There is no token in the cache; fallback -> prompt the user to sign-in.
-                    if (ex.ErrorCode != "failed_to_acquire_token_silently")
-                    {
-                        // An unexpected error occurred.
-                        throw;
-                    }
                 }
+
+                // Silent token acquisition failed, fallback to interactive/credential flow
+                return await this.AcquireTokenInternalAsync(scopes, userAlias);
             }
-            return AcquireTokenInternal(authenticationContext, resource, userAlias);
+            finally
+            {
+                _authSemaphore.Release();
+            }
+        }
+
+        protected abstract Task<AuthenticationResult> AcquireTokenSilentAsync(string[] scopes, string userAlias = "");
+
+        // Helper method to convert resource URL to scope
+        public static string[] ConvertResourceToScopes(string resource)
+        {
+            if (string.IsNullOrEmpty(resource))
+            {
+                return new string[0];
+            }
+
+            // Convert ADAL resource URLs to MSAL scopes
+            if (resource.EndsWith("/"))
+            {
+                resource = resource.TrimEnd('/');
+            }
+
+            return new[] { $"{resource}/.default" };
         }
     }
 
@@ -67,34 +93,90 @@ namespace Microsoft.Vault.Library
         [JsonProperty]
         public readonly string UserAliasType;
 
+        private IPublicClientApplication _publicClientApp;
+
         public VaultAccessUserInteractive(string domainHint) : base(PowerShellApplicationId, 2)
         {
-            DomainHint = string.IsNullOrEmpty(domainHint) ? "microsoft.com" : domainHint;
+            this.DomainHint = string.IsNullOrEmpty(domainHint) ? "microsoft.com" : domainHint;
         }
 
         [JsonConstructor]
         public VaultAccessUserInteractive(string domainHint, string UserAlias) : base(PowerShellApplicationId, 2)
         {
-            DomainHint = string.IsNullOrEmpty(domainHint) ? "microsoft.com" : domainHint;
-            UserAliasType = string.IsNullOrEmpty(UserAlias) ? Environment.UserName : UserAlias;
+            this.DomainHint = string.IsNullOrEmpty(domainHint) ? "microsoft.com" : domainHint;
+            this.UserAliasType = string.IsNullOrEmpty(UserAlias) ? Environment.UserName : UserAlias;
         }
 
-        protected override AuthenticationResult AcquireTokenInternal(AuthenticationContext authenticationContext, string resource, string userAlias)
+        private IPublicClientApplication GetPublicClientApp()
+        {
+            if (this._publicClientApp == null)
+            {
+                var builder = PublicClientApplicationBuilder
+                    .Create(this.ClientId)
+                    .WithAuthority($"https://login.microsoftonline.com/{this.DomainHint}")
+                    .WithRedirectUri("http://localhost")
+                    .WithDefaultRedirectUri();
+
+                // Disable broker to avoid WAM issues
+                try
+                {
+                    // Try the new way first (MSAL 4.61+)
+                    this._publicClientApp = builder.Build();
+                }
+                catch
+                {
+                    // Fallback for older MSAL versions
+                    this._publicClientApp = builder.Build();
+                }
+
+                // Configure token cache
+                var tokenCache = new FileTokenCache(this.DomainHint);
+                tokenCache.ConfigureTokenCache(this._publicClientApp.UserTokenCache);
+            }
+
+            return this._publicClientApp;
+        }
+
+        protected override async Task<AuthenticationResult> AcquireTokenSilentAsync(string[] scopes, string userAlias = "")
+        {
+            var app = this.GetPublicClientApp();
+            var accounts = await app.GetAccountsAsync();
+
+            if (!string.IsNullOrEmpty(userAlias))
+            {
+                var account = accounts.FirstOrDefault(a => a.Username.StartsWith(userAlias, StringComparison.OrdinalIgnoreCase));
+                if (account != null)
+                {
+                    return await app.AcquireTokenSilent(scopes, account).ExecuteAsync();
+                }
+            }
+
+            if (accounts.Any())
+            {
+                return await app.AcquireTokenSilent(scopes, accounts.First()).ExecuteAsync();
+            }
+
+            throw new MsalUiRequiredException("no_account", "No account found in cache");
+        }
+
+        protected override async Task<AuthenticationResult> AcquireTokenInternalAsync(string[] scopes, string userAlias = "")
         {
             if (false == Environment.UserInteractive)
             {
                 throw new VaultAccessException($@"Current process PID: {Process.GetCurrentProcess().Id} is running in non user interactive mode. Username: {Environment.UserDomainName}\{Environment.UserName} Machine name: {Environment.MachineName}");
             }
-            // Attempt to login with provided user alias.
-            else if(!string.IsNullOrEmpty(userAlias))
+
+            var app = this.GetPublicClientApp();
+            var builder = app.AcquireTokenInteractive(scopes)
+                .WithUseEmbeddedWebView(false); // Use system browser instead of embedded
+
+            // Attempt to login with provided user alias
+            if (!string.IsNullOrEmpty(userAlias))
             {
-                return authenticationContext.AcquireTokenAsync(resource, ClientId, new Uri("urn:ietf:wg:oauth:2.0:oob"), new PlatformParameters(PromptBehavior.Auto), UserIdentifier.AnyUser, $"login_hint={userAlias}@{DomainHint}&domain_hint={DomainHint}").GetAwaiter().GetResult();
+                builder = builder.WithLoginHint($"{userAlias}@{this.DomainHint}");
             }
-            // No alias provided so force login prompt.
-            else
-            {
-                return authenticationContext.AcquireTokenAsync(resource, ClientId, new Uri("urn:ietf:wg:oauth:2.0:oob"), new PlatformParameters(PromptBehavior.Always), UserIdentifier.AnyUser).GetAwaiter().GetResult();
-            }
+
+            return await builder.ExecuteAsync();
         }
 
         public override string ToString() => $"{nameof(VaultAccessUserInteractive)}";
@@ -106,16 +188,43 @@ namespace Microsoft.Vault.Library
         [JsonProperty]
         public readonly string ClientSecret;
 
+        private IConfidentialClientApplication _confidentialClientApp;
+
         [JsonConstructor]
         public VaultAccessClientCredential(string clientId, string clientSecret) : base(clientId, 1)
         {
             Guard.ArgumentNotNull(clientSecret, nameof(clientSecret));
-            ClientSecret = clientSecret;
+            this.ClientSecret = clientSecret;
         }
 
-        protected override AuthenticationResult AcquireTokenInternal(AuthenticationContext authenticationContext, string resource, string userAlias = "")
+        private IConfidentialClientApplication GetConfidentialClientApp()
         {
-            return authenticationContext.AcquireTokenAsync(resource, new ClientCredential(ClientId, ClientSecret)).GetAwaiter().GetResult();
+            if (this._confidentialClientApp == null)
+            {
+                this._confidentialClientApp = ConfidentialClientApplicationBuilder
+                    .Create(this.ClientId)
+                    .WithClientSecret(this.ClientSecret)
+                    .WithAuthority("https://login.microsoftonline.com/common")
+                    .Build();
+
+                // Configure token cache
+                var tokenCache = new MemoryTokenCache();
+                tokenCache.ConfigureTokenCache(this._confidentialClientApp.AppTokenCache);
+            }
+
+            return this._confidentialClientApp;
+        }
+
+        protected override async Task<AuthenticationResult> AcquireTokenSilentAsync(string[] scopes, string userAlias = "")
+        {
+            var app = this.GetConfidentialClientApp();
+            return await app.AcquireTokenForClient(scopes).ExecuteAsync();
+        }
+
+        protected override async Task<AuthenticationResult> AcquireTokenInternalAsync(string[] scopes, string userAlias = "")
+        {
+            var app = this.GetConfidentialClientApp();
+            return await app.AcquireTokenForClient(scopes).ExecuteAsync();
         }
 
         public override string ToString() => $"{nameof(VaultAccessClientCredential)}";
@@ -128,13 +237,14 @@ namespace Microsoft.Vault.Library
         public readonly string CertificateThumbprint;
 
         private X509Certificate2 _certificate;
+        private IConfidentialClientApplication _confidentialClientApp;
 
         [JsonConstructor]
         public VaultAccessClientCertificate(string clientId, string certificateThumbprint) : base(clientId, 0)
         {
             Guard.ArgumentIsSha1(certificateThumbprint, nameof(certificateThumbprint));
-            CertificateThumbprint = certificateThumbprint;
-            _certificate = null;
+            this.CertificateThumbprint = certificateThumbprint;
+            this._certificate = null;
         }
 
         private IEnumerable<X509Store> EnumerateX509Stores()
@@ -145,21 +255,21 @@ namespace Microsoft.Vault.Library
 
         private void FindCertificate()
         {
-            if (null != _certificate)
+            if (null != this._certificate)
             {
                 return;
             }
 
-            foreach (var store in EnumerateX509Stores())
+            foreach (var store in this.EnumerateX509Stores())
             {
                 try
                 {
                     store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
 
-                    var storeCerts = store.Certificates.Find(X509FindType.FindByThumbprint, CertificateThumbprint, false);
-                    if ((storeCerts != null) && (storeCerts.Count > 0))
+                    var storeCerts = store.Certificates.Find(X509FindType.FindByThumbprint, this.CertificateThumbprint, false);
+                    if (storeCerts != null && storeCerts.Count > 0)
                     {
-                        _certificate = storeCerts[0];
+                        this._certificate = storeCerts[0];
                         break;
                     }
                 }
@@ -175,19 +285,44 @@ namespace Microsoft.Vault.Library
         {
             get
             {
-                FindCertificate();
-                if (_certificate == null)
+                this.FindCertificate();
+                if (this._certificate == null)
                 {
-                    throw new CertificateNotFoundException($@"Certificate {CertificateThumbprint} is not installed in CurrentUser\My or in LocalMachine\My stores. Username: {Environment.UserDomainName}\{Environment.UserName} Machine name: {Environment.MachineName}");
+                    throw new CertificateNotFoundException($@"Certificate {this.CertificateThumbprint} is not installed in CurrentUser\My or in LocalMachine\My stores. Username: {Environment.UserDomainName}\{Environment.UserName} Machine name: {Environment.MachineName}");
                 }
 
-                return _certificate;
+                return this._certificate;
             }
         }
 
-        protected override AuthenticationResult AcquireTokenInternal(AuthenticationContext authenticationContext, string resource, string userAlias = "")
+        private IConfidentialClientApplication GetConfidentialClientApp()
         {
-            return authenticationContext.AcquireTokenAsync(resource, new ClientAssertionCertificate(ClientId, Certificate)).GetAwaiter().GetResult();
+            if (this._confidentialClientApp == null)
+            {
+                this._confidentialClientApp = ConfidentialClientApplicationBuilder
+                    .Create(this.ClientId)
+                    .WithCertificate(this.Certificate)
+                    .WithAuthority("https://login.microsoftonline.com/common")
+                    .Build();
+
+                // Configure token cache
+                var tokenCache = new MemoryTokenCache();
+                tokenCache.ConfigureTokenCache(this._confidentialClientApp.AppTokenCache);
+            }
+
+            return this._confidentialClientApp;
+        }
+
+        protected override async Task<AuthenticationResult> AcquireTokenSilentAsync(string[] scopes, string userAlias = "")
+        {
+            var app = this.GetConfidentialClientApp();
+            return await app.AcquireTokenForClient(scopes).ExecuteAsync();
+        }
+
+        protected override async Task<AuthenticationResult> AcquireTokenInternalAsync(string[] scopes, string userAlias = "")
+        {
+            var app = this.GetConfidentialClientApp();
+            return await app.AcquireTokenForClient(scopes).ExecuteAsync();
         }
 
         public override string ToString() => $"{nameof(VaultAccessClientCertificate)}";

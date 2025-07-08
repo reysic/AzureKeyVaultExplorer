@@ -29,7 +29,7 @@ $version = $tag.TrimStart('v').Split('-')[0]
 Write-Output "Version: $version"
 
 # Clean output directory.
-$publishDir = 'publish'
+$publishDir = 'bin/publish'
 $outDir = "$projDir/$publishDir"
 if (Test-Path $outDir) {
     Remove-Item -Path $outDir -Recurse
@@ -38,8 +38,6 @@ if (Test-Path $outDir) {
 # Publish the application.
 Push-Location $projDir
 try {
-    Write-Output 'Running init.cmd'
-    Start-Process -Wait $workingDir\init.cmd
     Write-Output 'Restoring:'
     dotnet restore -r win-x64
     Write-Output 'Publishing:'
@@ -49,7 +47,7 @@ try {
     }
     & $msBuildPath /target:publish /p:PublishProfile=ClickOnceProfile `
         /p:ApplicationVersion=$version /p:Configuration=Release `
-        /p:PublishDir=$publishDir /p:PublishUrl=$publishDir `
+        /p:PublishDir=$publishDir `
         $msBuildVerbosityArg
 
     # Measure publish size.

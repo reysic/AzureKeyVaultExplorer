@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- fixed Azure-portal SVG, now self-contained -->
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="Storage account icon"
+    width="32"
+    height="32"
+    viewBox="0 0 30.213 33.074">
+
+  <!-- little 2 × 2 squares (data blocks) -->
+  <path
+    d="M5.213 5.074h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm-12 4h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm-12 4h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm-12 4h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2zm4 0h2v2h-2z"
+    fill="#59b4d9"
+    opacity=".8"/>
+
+  <!-- outer rectangle -->
+  <path
+    d="M22.308 2.231v24.538H2.231V2.231h20.077M24.538 0H0v29h24.538V0z"
+    fill="#3999c6"/>
+
+  <!-- keyhole white cut-out -->
+  <path
+    d="M24.213 17.618c0-2.101-1.644-3.81-3.5-3.81s-3.5 1.709-3.5 3.81v2.456h7v-2.456z"
+    fill="#ffffff"/>
+
+  <!-- padlock body (yellow) -->
+  <path
+    d="M17.213 17.624c0-2.096 1.644-3.801 3.5-3.801s3.5 1.705 3.5 3.801v2.45h3v-2.45
+       c0-3.77-3.16-6.855-6.5-6.855s-6.5 3.085-6.5 6.855v2.45h3v-2.45zm13 4.534
+       c0-1.151-.967-2.084-2.16-2.084h-14.68c-1.193 0-2.16.933-2.16 2.084v8.374
+       c0 1.151.967 2.542 2.16 2.542h14.68c1.193 0 2.16-1.391 2.16-2.542v-8.374z"
+    fill="#fcd116"/>
+
+  <!-- subtle shading overlay -->
+  <path
+    d="M17.213 17.624c0-2.096 1.644-3.801 3.5-3.801s3.5 1.705 3.5 3.801v2.45h3v-2.45
+       c0-3.77-3.16-6.855-6.5-6.855s-6.5 3.085-6.5 6.855v2.45h3v-2.45zm13 4.534
+       c0-1.151-.967-2.084-2.16-2.084h-14.68c-1.193 0-2.16.933-2.16 2.084v8.374
+       c0 1.151.967 2.542 2.16 2.542h14.68c1.193 0 2.16-1.391 2.16-2.542v-8.374z"
+    fill="#ff8c00"
+    opacity=".3"/>
+</svg>

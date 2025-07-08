@@ -1,17 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
-
-using Microsoft.Azure.KeyVault;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Library
 {
+    using Microsoft.Azure.KeyVault;
+
     /// <summary>
-    /// Simple wrapper around KeyVaultClient
+    ///     Simple wrapper around KeyVaultClient
     /// </summary>
     internal class KeyVaultClientEx : KeyVaultClient
     {
@@ -21,16 +16,16 @@ namespace Microsoft.Vault.Library
         public KeyVaultClientEx(string vaultName, AuthenticationCallback authenticationCallback) : base(authenticationCallback)
         {
             Utils.GuardVaultName(vaultName);
-            VaultName = vaultName;
-            VaultUri = string.Format(Consts.AzureVaultUriFormat, VaultName);
+            this.VaultName = vaultName;
+            this.VaultUri = string.Format(Consts.AzureVaultUriFormat, this.VaultName);
         }
 
-        private string ToIdentifier(string endpoint, string name, string version) => $"{VaultUri}/{endpoint}/{name}" + (string.IsNullOrEmpty(version) ? "" : $"/{version}");
+        private string ToIdentifier(string endpoint, string name, string version) => $"{this.VaultUri}/{endpoint}/{name}" + (string.IsNullOrEmpty(version) ? "" : $"/{version}");
 
-        public string ToSecretIdentifier(string secretName, string version = null) => ToIdentifier(Consts.SecretsEndpoint, secretName, version);
+        public string ToSecretIdentifier(string secretName, string version = null) => this.ToIdentifier(Consts.SecretsEndpoint, secretName, version);
 
-        public string ToCertificateIdentifier(string certificateName, string version = null) => ToIdentifier(Consts.CertificatesEndpoint, certificateName, version);
+        public string ToCertificateIdentifier(string certificateName, string version = null) => this.ToIdentifier(Consts.CertificatesEndpoint, certificateName, version);
 
-        public override string ToString() => VaultUri;
+        public override string ToString() => this.VaultUri;
     }
 }

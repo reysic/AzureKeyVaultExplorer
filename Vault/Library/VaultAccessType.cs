@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Library
 {
@@ -9,7 +9,7 @@ namespace Microsoft.Vault.Library
     public enum VaultAccessTypeEnum
     {
         ReadOnly,
-        ReadWrite
+        ReadWrite,
     }
 
     [JsonObject(IsReference = true)]
@@ -26,8 +26,8 @@ namespace Microsoft.Vault.Library
         {
             Guard.ArgumentNotNull(readOnly, nameof(readOnly));
             Guard.ArgumentNotNull(readWrite, nameof(readWrite));
-            ReadOnly = readOnly;
-            ReadWrite = readWrite;
+            this.ReadOnly = readOnly;
+            this.ReadWrite = readWrite;
         }
     }
 }

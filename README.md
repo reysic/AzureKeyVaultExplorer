@@ -1,12 +1,46 @@
-# ![bigKey](./Screenshots/Key64x64.png) Azure Key Vault Explorer
+# ![bigKey](./Screenshots/keyvault_logo_main_48.png) Azure Key Vault Explorer
 
-**NOTE: This is a fork of the original project located at [https://github.com/microsoft/AzureKeyVaultExplorer](https://github.com/microsoft/AzureKeyVaultExplorer). This fork is not maintained by, or affiliated with, Microsoft, and was created to allow for continued development of the tool by the community.**
+**NOTE: This is a fork of a [fork](https://github.com/reysic/AzureKeyVaultExplorer) of the original project located at [AzureKeyVaultExplorer](https://github.com/microsoft/AzureKeyVaultExplorer).**
 
-Azure Key Vault Explorer - be productive when working with secrets!
 
-**[Click here to install the latest version (https://srnk.cc/ve)](https://srnk.cc/ve)**
+**[Click here to install the latest version (https://softworkz.github.io/AzureKeyVaultExplorer)](https://softworkz.github.io/AzureKeyVaultExplorer)**
 
-Authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin  
+## New in this Fork
+
+- Updated to .NET 8 and SDK-style projects with PackageReference
+- Updated authentication from ADAL.NET (deprecated) to Microsoft.Identity.Client (MSAL v4)
+- Removed Telemetry
+- Removed all nuget and other unnecessary scripting
+- Removed PowerShell interface
+  (doesn't work with .net 8; there are official PS modules now)
+- Move all URL strings to a global class
+- All code restructured and reformatted
+- Set up ClickOnce deployment in the net5+ way
+- Remove obsolete settings
+  ("Disable telemetry", Authority, GmeAuthority)
+- **Bug Fixes**
+  - SettingsDialog: Fixed exception when clicking on "User settings location..." after a fresh install
+  - Un-genericalize base forms
+  - Fix launch from ClickOnce URL activation
+  - Fix settings getting lost on update
+- **New Features**
+  - **Zero-Config Start**  
+    No need to prepare json files or enter account names in settings
+  - **Vaults picked from subscription can be saved**  
+    Select vaults from your Azure subscriptions
+  - Existing json configs are still working
+  - **Authentication via OS browser**  
+    instead of embedded window - entering passwords less often
+  - Applied some UI Casmetics
+  - Reduce label column width in PropertyGrids
+  - Add version to PropertyGrid in Secrets dialog
+
+---
+
+#### Azure Key Vault Explorer - be productive when working with secrets!
+
+
+Original authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin  
 Contact: Submit issues/PRs on this repo
 
 ## Table of Contents

@@ -72,4 +72,6 @@ using System.Runtime.InteropServices;
 <# } else { #>
 [assembly: AssemblyVersion("<#= string.Format("{0:yyyy}.{0:MMdd}.{0:HHmm}.{0:ss}", commitDateUTC) #>")]
 <# } #>
+[assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows10.0.17763.0")]
+[assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows10.0.17763.0")]
 
