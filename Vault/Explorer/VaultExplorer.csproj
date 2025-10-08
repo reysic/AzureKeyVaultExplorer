@@ -6,12 +6,12 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Microsoft.Vault.Explorer</RootNamespace>
-    <AssemblyDescription>Azure Key Vault Explorer 2</AssemblyDescription>
+    <AssemblyDescription>Azure Key Vault Explorer</AssemblyDescription>
     <ApplicationIcon>$(AssemblyName).ico</ApplicationIcon>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch Condition="'$(BuildingInsideVisualStudio)' != ''">None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <AutoVersioning>true</AutoVersioning>
-    <ProductName>VaultExplorerNext</ProductName>
-    <AssemblyCompany>softworkz</AssemblyCompany>
+    <ProductName>VaultExplorer</ProductName>
+    <AssemblyCompany>VaultExplorer</AssemblyCompany>
     <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>2024.1219.1449.37</ApplicationVersion>
     <UseWindowsForms>true</UseWindowsForms>
@@ -24,6 +24,7 @@
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+	<SelfContained>True</SelfContained>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="fernandreu.ScintillaNET" Version="4.2.0" />
