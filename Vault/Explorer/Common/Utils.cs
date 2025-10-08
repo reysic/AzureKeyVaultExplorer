@@ -23,10 +23,6 @@ namespace Microsoft.Vault.Explorer.Common
 
     public static class Utils
     {
-        public const string ProductName = "VaultExplorer";
-
-        public const string AppName = "Azure Key Vault Explorer";
-
         /// <summary>
         ///     Space with black down triangle char
         /// </summary>
@@ -207,11 +203,9 @@ namespace Microsoft.Vault.Explorer.Common
 
         public static string NewApiKey(int length = 64)
         {
-            // Using Crypto Random Generator to fetch bytes.
-            var r = new RNGCryptoServiceProvider();
+            // Using RandomNumberGenerator static methods to fetch bytes.
             byte[] buff = new byte[length];
-            r.GetBytes(buff);
-            r.Dispose();
+            RandomNumberGenerator.Fill(buff);
             return Convert.ToBase64String(buff);
         }
 
@@ -228,7 +222,7 @@ namespace Microsoft.Vault.Explorer.Common
                             using (RegistryKey myKey = myUninstallKey.OpenSubKey(subKeyName, true))
                             {
                                 object myValue = myKey.GetValue("DisplayName");
-                                if (myValue != null && myValue.ToString() == ProductName)
+                                if (myValue != null && myValue.ToString() == Globals.ProductName)
                                 {
                                     myKey.SetValue("DisplayIcon", Application.ExecutablePath);
                                     break;
@@ -251,7 +245,7 @@ namespace Microsoft.Vault.Explorer.Common
                 (from cert in store.Certificates.Find(X509FindType.FindByTimeValid, DateTime.Now, false)
                     orderby string.IsNullOrEmpty(cert.FriendlyName) ? cert.GetNameInfo(X509NameType.SimpleName, false) : cert.FriendlyName descending
                     select cert).ToArray());
-            X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(notExpiredAndSortedCerts, AppName,
+            X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(notExpiredAndSortedCerts, Globals.AppName,
                 $"Select a certificate from the {location}\\{name} store that you would like to add to {vaultAlias}", X509SelectionFlag.SingleSelection, hwndParent);
             return 1 == selected.Count ? selected[0] : null;
         }
@@ -309,7 +303,7 @@ namespace Microsoft.Vault.Explorer.Common
 
             // Fill in the text elements
             XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
-            stringElements[0].AppendChild(toastXml.CreateTextNode(AppName));
+            stringElements[0].AppendChild(toastXml.CreateTextNode(Globals.AppName));
             stringElements[1].AppendChild(toastXml.CreateTextNode(body));
 
             // Absolute path to an image
@@ -319,7 +313,7 @@ namespace Microsoft.Vault.Explorer.Common
 
             // Create and show the toast
             ToastNotification toast = new ToastNotification(toastXml);
-            ToastNotificationManager.CreateToastNotifier(AppName).Show(toast);
+            ToastNotificationManager.CreateToastNotifier(Globals.AppName).Show(toast);
         }
     }
 }

@@ -23,19 +23,11 @@ namespace Microsoft.Vault.Explorer.Dialogs.Subscriptions
         private const string ApiVersion = "api-version=2016-07-01";
         private const string ManagmentEndpoint = "https://management.azure.com/";
         private const string AddAccountText = "Add New Account";
-        private const string AddDomainHintText = "How to add new domain hint here...";
-
-        private const string AddDomainHintInstructions = @"To add new domain hint, just follow below steps:
-1) In the main window open Settings dialog
-2) Add domain hint line to 'Domain hints' property
-3) Click on 'OK' button to save and close Settings dialog
-4) Open Subscriptions Manager dialog";
 
         private AccountItem _currentAccountItem;
         private AuthenticationResult _currentAuthResult;
         private KeyVaultManagementClient _currentKeyVaultMgmtClient;
         private readonly HttpClient _httpClient;
-        private int _initialVaultCount = 0;
 
         public VaultAlias CurrentVaultAlias { get; private set; }
 
@@ -59,7 +51,6 @@ namespace Microsoft.Vault.Explorer.Dialogs.Subscriptions
             }
 
             this.uxComboBoxAccounts.Items.Add(AddAccountText);
-            this.uxComboBoxAccounts.Items.Add(AddDomainHintText);
 
             // Only auto-select if we have pre-configured accounts, otherwise let user choose
             if (hasPreConfiguredAccounts)
@@ -86,12 +77,6 @@ namespace Microsoft.Vault.Explorer.Dialogs.Subscriptions
                 case AddAccountText:
                     this.AddNewAccount();
                     break;
-
-                case AddDomainHintText:
-                    // Display instructions on how to add domain hint
-                    MessageBox.Show(AddDomainHintInstructions, Utils.AppName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.uxComboBoxAccounts.SelectedItem = null;
-                    return;
 
                 case AccountItem account:
                     // Authenticate into selected account
@@ -185,12 +170,22 @@ namespace Microsoft.Vault.Explorer.Dialogs.Subscriptions
                 this._currentAccountItem = new AccountItem("common");
                 await this.GetAuthenticationTokenAsync();
 
+                if (string.IsNullOrEmpty(this._currentAuthResult.Account?.Username))
+                {
+                    MessageBox.Show("Authentication did not return a user name. Please try again.", "Authentication Problem", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Get new user account and add it to default settings
-                string userAccountName = this._currentAuthResult.Account?.Username ?? "unknown@unknown.com";
+                string userAccountName = this._currentAuthResult.Account.Username;
                 string[] userLogin = userAccountName.Split('@');
                 this._currentAccountItem.UserAlias = userLogin[0];
                 this._currentAccountItem.DomainHint = userLogin[1];
-                Settings.Default.AddUserAccountName(userAccountName);
+                if (!Settings.Default.AddUserAccountName(userAccountName))
+                {
+                    MessageBox.Show($"The user name {userAccountName} already exists.", "Username exists", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 // Add the new account to the dropdown and select it
                 var newAccountItem = new AccountItem(this._currentAccountItem.DomainHint, this._currentAccountItem.UserAlias);

@@ -5,6 +5,9 @@
     <RootNamespace>Microsoft.Vault.Core</RootNamespace>
     <AssemblyName>Microsoft.Vault.Core</AssemblyName>
     <StartupObject />
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="Exists('$(DOWNLOADSECUREFILE_SECUREFILEPATH)')">
     <SignAssembly>true</SignAssembly>

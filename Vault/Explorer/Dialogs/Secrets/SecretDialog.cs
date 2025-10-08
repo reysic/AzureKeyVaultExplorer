@@ -116,8 +116,8 @@ namespace Microsoft.Vault.Explorer.Dialogs.Secrets
         public SecretDialog(ISession session, X509Certificate2 certificate) : this(session)
         {
             bool hasExportablePrivateKey = certificate.HasPrivateKey && (
-                ((certificate.PrivateKey as RSACryptoServiceProvider)?.CspKeyContainerInfo.Exportable ?? false) ||
-                ((certificate.PrivateKey as DSACryptoServiceProvider)?.CspKeyContainerInfo.Exportable ?? false));
+                (certificate.GetRSAPrivateKey()?.ExportParameters(true) != null) ||
+                (certificate.GetDSAPrivateKey()?.ExportParameters(true) != null));
 
             var obj = (PropertyObjectSecret)this.PropertyObject;
             obj.ContentType = hasExportablePrivateKey ? ContentType.Pkcs12 : ContentType.Certificate;

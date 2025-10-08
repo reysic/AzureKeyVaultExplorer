@@ -203,6 +203,7 @@ namespace Microsoft.Vault.Explorer.Config
                     {
                         ["$type"] = "Microsoft.Vault.Library.VaultAccessUserInteractive, Microsoft.Vault.Library",
                         ["DomainHint"] = domainHint,
+                        ["UserAliasType"] = userAlias,
                     };
 
                 case 1: // Client Credential

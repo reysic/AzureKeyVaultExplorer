@@ -185,7 +185,7 @@ namespace Microsoft.Vault.Explorer.Controls.Lists
 
             // Check if we already have *another* secret with the same name
             if (oldName != soNew.Name && session.ListViewSecrets.Items.ContainsKey(soNew.Name) &&
-                MessageBox.Show($"Are you sure you want to replace existing item '{soNew.Name}' with new value?", Utils.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                MessageBox.Show($"Are you sure you want to replace existing item '{soNew.Name}' with new value?", Globals.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
                 return false;
             }
@@ -193,7 +193,7 @@ namespace Microsoft.Vault.Explorer.Controls.Lists
             // Detect dups by Md5
             var sameSecretsList = from slvi in session.ListViewSecrets.Items.Cast<ListViewItemBase>() where slvi.Md5 == newMd5 && slvi.Name != oldName && slvi.Name != soNew.Name select slvi.Name;
             if (sameSecretsList.Count() > 0 &&
-                MessageBox.Show($"There are {sameSecretsList.Count()} other item(s) in the vault which has the same Md5: {newMd5}.\nHere the name(s) of the other items:\n{string.Join(", ", sameSecretsList)}\nAre you sure you want to add or update item {soNew.Name} and have a duplication of secrets?", Utils.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                MessageBox.Show($"There are {sameSecretsList.Count()} other item(s) in the vault which has the same Md5: {newMd5}.\nHere the name(s) of the other items:\n{string.Join(", ", sameSecretsList)}\nAre you sure you want to add or update item {soNew.Name} and have a duplication of secrets?", Globals.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
                 return false;
             }

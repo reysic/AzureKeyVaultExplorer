@@ -10,7 +10,7 @@ namespace Microsoft.Vault.Explorer.Dialogs.Subscriptions
         public AccountItem(string domainHint, string userAlias = null)
         {
             this.DomainHint = domainHint;
-            this.UserAlias = userAlias ?? Environment.UserName;
+            this.UserAlias = userAlias ?? Globals.DefaultUserName;
         }
 
         public override string ToString() => $"{this.UserAlias}@{this.DomainHint}";

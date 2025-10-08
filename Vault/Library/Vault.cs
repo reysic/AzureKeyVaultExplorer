@@ -67,11 +67,11 @@ namespace Microsoft.Vault.Library
             Guard.ArgumentNotNull(vaultsConfig, nameof(vaultsConfig));
             Guard.ArgumentCollectionNotEmpty(vaultNames, nameof(vaultNames));
             this.VaultsConfig = vaultsConfig;
-            this.VaultNames = (from v in vaultNames where !string.IsNullOrEmpty(v) select v).ToArray();
+            this.VaultNames = vaultNames.Where(Extensions.IsNotEmpty).ToArray();
             switch (this.VaultNames.Length)
             {
                 case 1:
-                    this._keyVaultClients = new KeyVaultClientEx[1]
+                    this._keyVaultClients = new []
                     {
                         this.CreateKeyVaultClientEx(accessType, this.VaultNames[0]),
                     };
@@ -182,11 +182,10 @@ namespace Microsoft.Vault.Library
                     vas = accessType == VaultAccessTypeEnum.ReadOnly ? vat.ReadOnly : vat.ReadWrite;
 
                     // Order possible VaultAccess options by Order property
-                    IEnumerable<VaultAccess> vaSorted = from va in vas orderby va.Order select va;
-                    vas = vaSorted.ToArray();
+                    vas = vas.OrderBy(va => va.Order).ToArray();
 
                     // Get user alias for interactive authentication
-                    userAliasType = (from va in vaSorted where va is VaultAccessUserInteractive select (VaultAccessUserInteractive)va).FirstOrDefault()?.UserAliasType;
+                    userAliasType = (from va in vas where va is VaultAccessUserInteractive select (VaultAccessUserInteractive)va).FirstOrDefault()?.UserAliasType;
                 }
 
                 // Convert resource URL to MSAL scopes
@@ -199,17 +198,15 @@ namespace Microsoft.Vault.Library
                     try
                     {
                         // If user alias type is different from environment, force login prompt, otherwise silently login
-                        var authResult = await va.AcquireTokenAsync(scopes, userAliasType == Environment.UserName ? Environment.UserName : "");
+                        var authResult = await va.AcquireTokenAsync(scopes, userAliasType);
 
-                        // Set authenticated user name based on auth result
-                        if (authResult.Account != null)
+                        if (authResult.Account == null)
                         {
-                            this.AuthenticatedUserName = authResult.Account.Username ?? $"{Environment.UserDomainName}\\{Environment.UserName}";
+                            // should never happen
+                            throw new VaultAccessException("The authentication result doesn't include account information");
                         }
-                        else
-                        {
-                            this.AuthenticatedUserName = $"{Environment.UserDomainName}\\{Environment.UserName}";
-                        }
+
+                        this.AuthenticatedUserName = authResult.Account.Username ?? userAliasType;
 
                         return authResult.AccessToken;
                     }
@@ -451,9 +448,7 @@ namespace Microsoft.Vault.Library
 
         /// <summary>
         ///     Gets a certificate with private and public keys. Keys are exportable.
-        ///     We are NOT using here
-        ///     <see cref="KeyVaultClient.GetCertificateWithPrivateKeyAsync(string, string, string, CancellationToken)" /> as this
-        ///     returns a certificate with non-exportable keys
+        ///     Returns a certificate with non-exportable keys
         /// </summary>
         /// <param name="certificateName">The name of the certificate in the given vault</param>
         /// <param name="certificateVersion">The version of the certificate (optional)</param>
@@ -462,8 +457,7 @@ namespace Microsoft.Vault.Library
         public async Task<X509Certificate2> GetCertificateWithExportableKeysAsync(string certificateName, string certificateVersion = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             SecretBundle s = await this.GetSecretAsync(certificateName, certificateVersion, cancellationToken);
-            var cert = new X509Certificate2();
-            cert.Import(Convert.FromBase64String(s.Value), string.Empty, X509KeyStorageFlags.Exportable);
+            var cert = new X509Certificate2(Convert.FromBase64String(s.Value), string.Empty, X509KeyStorageFlags.Exportable);
             return cert;
         }
 

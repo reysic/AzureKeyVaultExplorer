@@ -38,6 +38,8 @@ namespace Microsoft.Vault.Explorer
 
             CheckUpdateSettings();
 
+            Globals.DefaultUserName = Settings.Default.UserAccountNamesList.FirstOrDefault() ?? Environment.UserName;
+
             // First run install steps
             Utils.ClickOnce_SetAddRemoveProgramsIcon();
             ActivationUri.RegisterVaultProtocol();
@@ -78,20 +80,24 @@ namespace Microsoft.Vault.Explorer
         {
             try
             {
-                // Only setup if using default location
-                if (Settings.Default.JsonConfigurationFilesRoot != @".\")
-                {
-                    return; // User has customized the location, don't interfere
-                }
-
                 // Define target directory
                 string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                string configDir = Path.Combine(localAppData, "VaultExplorer", "Config");
+                string configDir = Path.Combine(localAppData, Globals.ProductName, "Config");
 
                 // Create directory if it doesn't exist
                 if (!Directory.Exists(configDir))
                 {
                     Directory.CreateDirectory(configDir);
+                }
+
+                // Only setup if using default location
+                var pathFromSettings = Settings.Default.JsonConfigurationFilesRoot;
+                if (!string.IsNullOrEmpty(pathFromSettings) && Directory.Exists(pathFromSettings))
+                {
+                    if (!pathFromSettings.Equals(configDir, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return; // User has customized the location, don't interfere
+                    }
                 }
 
                 // List of configuration files to copy
@@ -209,7 +215,6 @@ namespace Microsoft.Vault.Explorer
     ///     This class filters (listens to) all messages for the application and if
     ///     a relevant message (such as mouse or keyboard) is received then it resets the timer.
     /// </summary>
-    [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
     public class LeaveIdleMessageFilter : IMessageFilter
     {
         private const int WM_NCLBUTTONDOWN = 0x00A1;

@@ -77,28 +77,36 @@ namespace Microsoft.Vault.Explorer
 
         public MainForm(ActivationUri activationUri) : this()
         {
-            Guard.ArgumentNotNull(activationUri, nameof(activationUri));
-            this._activationUri = activationUri;
-            // ActivaionUri is Empty, nothing special to do
-            if (this._activationUri == ActivationUri.Empty)
+            try
             {
-                return;
-            }
+                Guard.ArgumentNotNull(activationUri, nameof(activationUri));
+                this._activationUri = activationUri;
+                // ActivaionUri is Empty, nothing special to do
+                if (this._activationUri == ActivationUri.Empty)
+                {
+                    return;
+                }
 
-            // Activation by vault://name
-            this.uxComboBoxVaultAlias_DropDown(this, EventArgs.Empty);
-            this.uxComboBoxVaultAlias.SelectedIndex = 0;
-            this.SetCurrentVaultAlias();
-            if (!string.IsNullOrEmpty(this._activationUri.VaultName) && string.IsNullOrEmpty(this._activationUri.ItemName))
+                // Activation by vault://name
+                this.uxComboBoxVaultAlias_DropDown(this, EventArgs.Empty);
+                this.uxComboBoxVaultAlias.SelectedIndex = 0;
+                this.SetCurrentVaultAlias();
+                if (!string.IsNullOrEmpty(this._activationUri.VaultName) && string.IsNullOrEmpty(this._activationUri.ItemName))
+                {
+                    this.uxMenuItemRefresh.PerformClick(); // Refresh list
+                    return;
+                }
+
+                // Activation by vault://name/collection/itemName
+                this.SetCurrentVault();
+                this._activationUri.PerformAction(this.CurrentVault);
+                this.Close();
+            }
+            catch (Exception ex)
             {
-                this.uxMenuItemRefresh.PerformClick(); // Refresh list
-                return;
+                MessageBox.Show($"{ex.Message}",
+                    "Error during Activation", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            // Activation by vault://name/collection/itemName
-            this.SetCurrentVault();
-            this._activationUri.PerformAction(this.CurrentVault);
-            this.Close();
         }
 
         /// <summary>Raises the <see cref="E:System.Windows.Forms.Form.Shown" /> event.</summary>
@@ -232,8 +240,6 @@ namespace Microsoft.Vault.Explorer
 
         private UxOperation NewUxOperation(params ToolStripItem[] controlsToToggle) => new UxOperation(this.CurrentVaultAlias, this.uxStatusLabel, null, null, controlsToToggle);
 
-        private void Invoke(Action action) => base.Invoke(action); // Small helper to avoid casting delegate to Action
-
         private void uxComboBoxVaultAlias_DropDown(object sender, EventArgs e)
         {
             object prevSelectedItem = this.uxComboBoxVaultAlias.SelectedItem;
@@ -348,7 +354,7 @@ namespace Microsoft.Vault.Explorer
         {
             this.CurrentVault = new Vault(Utils.FullPathToJsonFile(Settings.Default.VaultsJsonFileLocation), VaultAccessTypeEnum.ReadWrite, this.CurrentVaultAlias.VaultNames);
             // In case that subscription is chosen by the dialog, overwrite permissions taken from vaults.json
-            if (this.CurrentVaultAlias.UserAlias != null)
+            if (this.CurrentVaultAlias.UserAlias != null || this.CurrentVault.VaultsConfig.Count == 0)
             {
                 this.CurrentVault.VaultsConfig[this.CurrentVaultAlias.VaultNames[0]] = new VaultAccessType(
                     new VaultAccess[] { new VaultAccessUserInteractive(this.CurrentVaultAlias.DomainHint, this.CurrentVaultAlias.UserAlias) },
@@ -362,7 +368,7 @@ namespace Microsoft.Vault.Explorer
             {
                 try
                 {
-                    this.Text = Utils.AppName;
+                    this.Text = Globals.AppName;
                     this.SetCurrentVault();
                     this.uxPropertyGridSecret.SelectedObjects = null;
                     this.uxListViewSecrets.AllowDrop = false;
@@ -533,7 +539,7 @@ namespace Microsoft.Vault.Explorer
 
             if (fi.Length > Consts.MB)
             {
-                MessageBox.Show($"File {fi.FullName} size is {fi.Length:N0} bytes. Maximum file size allowed for secret value (before compression) is 1 MB.", Utils.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"File {fi.FullName} size is {fi.Length:N0} bytes. Maximum file size allowed for secret value (before compression) is 1 MB.", Globals.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
@@ -661,8 +667,8 @@ namespace Microsoft.Vault.Explorer
                 return;
             }
 
-            if (!item.Active && MessageBox.Show($"'{item.Name}' {item.Kind} is not active or expired. In order to view or edit {item.Kind}, {Utils.AppName} must change the expiration times of '{item.Name}'. Are you sure you want to change Valid from time (UTC): '{Utils.NullableDateTimeToString(item.NotBefore)}' and Valid until time (UTC): '{Utils.NullableDateTimeToString(item.Expires)}' to one year from now?\n\nNote: You will be able to change back the expiration times in the Edit dialog if needed.",
-                    Utils.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (!item.Active && MessageBox.Show($"'{item.Name}' {item.Kind} is not active or expired. In order to view or edit {item.Kind}, {Globals.AppName} must change the expiration times of '{item.Name}'. Are you sure you want to change Valid from time (UTC): '{Utils.NullableDateTimeToString(item.NotBefore)}' and Valid until time (UTC): '{Utils.NullableDateTimeToString(item.Expires)}' to one year from now?\n\nNote: You will be able to change back the expiration times in the Edit dialog if needed.",
+                    Globals.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 using (var op = this.NewUxOperationWithProgress(this.uxButtonEdit, this.uxMenuItemEdit))
                 {
@@ -705,7 +711,7 @@ namespace Microsoft.Vault.Explorer
             if (null != item)
             {
                 string action = item.Enabled ? "disable" : "enable";
-                if (MessageBox.Show($"Are you sure you want to {action} {item.Kind} '{item.Name}'?", Utils.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show($"Are you sure you want to {action} {item.Kind} '{item.Name}'?", Globals.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     using (var op = this.NewUxOperationWithProgress(this.uxButtonToggle, this.uxMenuItemToggle))
                     {
@@ -722,7 +728,7 @@ namespace Microsoft.Vault.Explorer
             if (this.uxListViewSecrets.SelectedItems.Count > 0)
             {
                 string itemNames = string.Join(", ", from item in this.uxListViewSecrets.SelectedItems.Cast<ListViewItem>() select item.Name);
-                if (MessageBox.Show($"Are you sure you want to delete {this.uxListViewSecrets.SelectedItems.Count} item(s) with the following name(s)?\n{itemNames}\n\nWarning: This operation can not be undone!", Utils.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                if (MessageBox.Show($"Are you sure you want to delete {this.uxListViewSecrets.SelectedItems.Count} item(s) with the following name(s)?\n{itemNames}\n\nWarning: This operation can not be undone!", Globals.AppName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
                     using (var op = this.NewUxOperationWithProgress(this.uxButtonDelete, this.uxMenuItemDelete))
                     {

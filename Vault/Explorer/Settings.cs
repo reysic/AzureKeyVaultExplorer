@@ -94,7 +94,6 @@ namespace Microsoft.Vault.Explorer
         }
 
         [UserScopedSetting]
-        [DefaultSettingValue(@".\")]
         [DisplayName("Root location")]
         [Description("Relative or absolute path to root folder where .json files are located.\nEnvironment variables are supported and expanded accordingly.")]
         [Category("Vaults configuration")]
@@ -153,9 +152,7 @@ namespace Microsoft.Vault.Explorer
             set { this[nameof(this.CustomTagsJsonFileLocation)] = value; }
         }
 
-
         [UserScopedSetting]
-        [DefaultSettingValue("[ENTER_YOUR_USER_ACCOUNT_HERE]")]
         [DisplayName("User Account Names")]
         [Description("Multi-line string of user account names to use in the subscriptions manager dialog.")]
         [Category("Subscriptions dialog")]
@@ -183,7 +180,7 @@ namespace Microsoft.Vault.Explorer
                 // Set default if empty
                 if (string.IsNullOrEmpty(this.UserAccountNames))
                 {
-                    this.UserAccountNames = $"{Environment.UserName}@microsoft.com";
+                    this.UserAccountNames = string.Empty;
                 }
 
                 return from s in this.UserAccountNames.Split('\n') where !string.IsNullOrWhiteSpace(s) select s.Trim();
@@ -212,13 +209,16 @@ namespace Microsoft.Vault.Explorer
         }
 
         // Adds and saves new user alias in app settings.
-        public void AddUserAccountName(string userAccountName)
+        public bool AddUserAccountName(string userAccountName)
         {
             if (!this.UserAccountNames.Contains(userAccountName))
             {
                 this[nameof(this.UserAccountNames)] = this.UserAccountNames + "\n" + userAccountName;
                 base.Save();
+                return true;
             }
+
+            return false;
         }
     }
 }

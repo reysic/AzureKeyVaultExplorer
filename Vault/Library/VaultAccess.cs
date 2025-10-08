@@ -97,14 +97,14 @@ namespace Microsoft.Vault.Library
 
         public VaultAccessUserInteractive(string domainHint) : base(PowerShellApplicationId, 2)
         {
-            this.DomainHint = string.IsNullOrEmpty(domainHint) ? "microsoft.com" : domainHint;
+            this.DomainHint = string.IsNullOrEmpty(domainHint) ? "common" : domainHint;
         }
 
         [JsonConstructor]
         public VaultAccessUserInteractive(string domainHint, string UserAlias) : base(PowerShellApplicationId, 2)
         {
-            this.DomainHint = string.IsNullOrEmpty(domainHint) ? "microsoft.com" : domainHint;
-            this.UserAliasType = string.IsNullOrEmpty(UserAlias) ? Environment.UserName : UserAlias;
+            this.DomainHint = string.IsNullOrEmpty(domainHint) ? "common" : domainHint;
+            this.UserAliasType = UserAlias ?? string.Empty;
         }
 
         private IPublicClientApplication GetPublicClientApp()
@@ -173,7 +173,15 @@ namespace Microsoft.Vault.Library
             // Attempt to login with provided user alias
             if (!string.IsNullOrEmpty(userAlias))
             {
-                builder = builder.WithLoginHint($"{userAlias}@{this.DomainHint}");
+                if (userAlias.Contains('@'))
+                {
+                    builder = builder.WithLoginHint($"{userAlias}");
+                }
+                else
+                {
+                    builder = builder.WithLoginHint($"{userAlias}@{this.DomainHint}");
+                }
+
             }
 
             return await builder.ExecuteAsync();

@@ -5,6 +5,7 @@
 <#@ parameter name="AssemblyTitle" type="System.String" #>
 <#@ parameter name="AssemblyDescription" type="System.String" #>
 <#@ parameter name="AssemblyFileVersionOnly" type="System.String" #>
+<#@ parameter name="AssemblyCompany" type="System.String" #>
 <#
 
 // Execute any command with args and returns stdout
@@ -64,9 +65,9 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("<#= AssemblyTitle #> (Commit: <#= shortCommitId #>)")]
 [assembly: AssemblyDescription("<#= AssemblyDescription #>")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("<#= AssemblyCompany #>")]
 [assembly: AssemblyProduct("<#= AssemblyTitle #>")]
-[assembly: AssemblyCopyright("(c) Microsoft Corporation. All rights reserved.")]
+[assembly: AssemblyCopyright("(c) softworkz & Microsoft Corporation. All rights reserved.")]
 <# if (assemblyFileVersionOnly) { #>
 [assembly: AssemblyFileVersion("<#= string.Format("{0:yyyy}.{0:MMdd}.{0:HHmm}.{0:ss}", commitDateUTC) #>")]
 <# } else { #>

@@ -73,7 +73,7 @@ namespace Microsoft.Vault.Explorer.Dialogs.Settings
         private string FetchVersions()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(Utils.GetFileVersionString(string.Format("{0} version: ", Utils.AppName), Path.GetFileName(Application.ExecutablePath), string.Format(" ({0})", Environment.Is64BitProcess ? "x64" : "x86")));
+            sb.AppendLine(Utils.GetFileVersionString(string.Format("{0} version: ", Globals.AppName), Path.GetFileName(Application.ExecutablePath), string.Format(" ({0})", Environment.Is64BitProcess ? "x64" : "x86")));
             sb.AppendLine(string.Format(".NET framework version: {0}", Environment.Version));
             sb.AppendLine(Utils.GetFileVersionString("Microsoft.Azure.KeyVault.dll version: ", "Microsoft.Azure.KeyVault.dll"));
             sb.AppendLine(Utils.GetFileVersionString("Microsoft.Azure.Management.KeyVault.dll version: ", "Microsoft.Azure.Management.KeyVault.dll"));
