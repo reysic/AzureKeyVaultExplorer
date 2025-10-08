@@ -1,0 +1,13 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+namespace Microsoft.Vault.Library
+{
+    public static class Extensions
+    {
+        public static bool IsNotEmpty(this string str)
+        {
+            return !string.IsNullOrEmpty(str);
+        }
+      }
+}

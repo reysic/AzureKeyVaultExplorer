@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Library
 {
@@ -8,12 +8,12 @@ namespace Microsoft.Vault.Library
     public static class Consts
     {
         /// <summary>
-        ///  Sha1 of zero bytes file
+        ///     Sha1 of zero bytes file
         /// </summary>
         public const string Sha1EmptyFile = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
         /// <summary>
-        /// Sha256 of zero bytes file
+        ///     Sha256 of zero bytes file
         /// </summary>
         public const string Sha256EmptyFile = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 

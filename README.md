@@ -6,7 +6,8 @@ Azure Key Vault Explorer - be productive when working with secrets!
 
 **[Click here to install the latest version (https://reysic.github.io/AzureKeyVaultExplorer)](https://reysic.github.io/AzureKeyVaultExplorer)**
 
-Authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin  
+Original Authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin
+Current Authors: reysic, softworkz
 Contact: Submit issues/PRs on this repo
 
 ## Table of Contents
@@ -303,7 +304,6 @@ Telemetry can be disabled in the Settings dialog. Set *Disable telemetry* to *Tr
 This project has been tested with Visual Studio 2022 and .NET Framework 4.8. To build locally:
 
 * Clone this repo
-* Run `.\init.cmd` from the repo root to install NuGet packages
 * Build and run
 
 PRs are welcome!
@@ -327,3 +327,33 @@ See [release.md](https://github.com/reysic/AzureKeyVaultExplorer/blob/c6c5153fc0
   * Configure ClickOnce deployments for future releases - :white_check_mark:
 * Improve onboarding
   * Better error messaging if user hasn't configured subscription dialog values
+
+#### softworkz Updates
+
+- Updated to .NET 8 and SDK-style projects with PackageReference
+- Updated authentication from ADAL.NET (deprecated) to Microsoft.Identity.Client (MSAL v4)
+- Removed Telemetry
+- Removed all nuget and other unnecessary scripting
+- Removed PowerShell interface
+  (doesn't work with .net 8; there are official PS modules now)
+- Move all URL strings to a global class
+- All code restructured and reformatted
+- Set up ClickOnce deployment in the net5+ way
+- Remove obsolete settings
+  ("Disable telemetry", Authority, GmeAuthority)
+- **Bug Fixes**
+  - SettingsDialog: Fixed exception when clicking on "User settings location..." after a fresh install
+  - Un-genericalize base forms
+  - Fix launch from ClickOnce URL activation
+  - Fix settings getting lost on update
+- **New Features**
+  - **Zero-Config Start**  
+    No need to prepare json files or enter account names in settings
+  - **Vaults picked from subscription can be saved**  
+    Select vaults from your Azure subscriptions
+  - Existing json configs are still working
+  - **Authentication via OS browser**  
+    instead of embedded window - entering passwords less often
+  - Applied some UI Casmetics
+  - Reduce label column width in PropertyGrids
+  - Add version to PropertyGrid in Secrets dialog

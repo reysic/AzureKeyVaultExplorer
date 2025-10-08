@@ -1,353 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
--->
-<Project ToolsVersion="16.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Environment -->
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Environment.props))\Environment.props" Condition=" '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Environment.props))' != '' " />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\Build\AutoVersioning.props" />
-  <Import Project="ClickOnce.props" Condition="$(ClickOnceInstallUpdateUrl) != ''" />
+
   <PropertyGroup>
-    <ProjectGuid>{0720CA4C-5D06-47FC-8DF9-2A42C40119A3}</ProjectGuid>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Vault.Explorer</RootNamespace>
-    <AssemblyName>VaultExplorer</AssemblyName>
     <AssemblyDescription>Azure Key Vault Explorer</AssemblyDescription>
-    <ErrorReport>prompt</ErrorReport>
     <ApplicationIcon>$(AssemblyName).ico</ApplicationIcon>
-    <FileAlignment>512</FileAlignment>
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>x64</PlatformTarget>
-    <TargetPlatformVersion>8.0</TargetPlatformVersion>
-    <PlatformTarget Condition="'$(BuildingInsideVisualStudio)' != ''">AnyCPU</PlatformTarget>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch Condition="'$(BuildingInsideVisualStudio)' != ''">None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <AutoVersioning>true</AutoVersioning>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://reysic.github.io/AzureKeyVaultExplorer/</InstallUrl>
-    <SupportUrl>https://github.com/reysic/AzureKeyVaultExplorer/issues</SupportUrl>
-    <ErrorReportUrl>https://github.com/reysic/AzureKeyVaultExplorer/issues</ErrorReportUrl>
     <ProductName>VaultExplorer</ProductName>
-    <PublisherName>VaultExplorer</PublisherName>
-    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <AssemblyCompany>VaultExplorer</AssemblyCompany>
     <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>2024.1219.1449.37</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="Exists('$(DOWNLOADSECUREFILE_SECUREFILEPATH)')">
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(DOWNLOADSECUREFILE_SECUREFILEPATH)</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <NoWarn>;NU1507</NoWarn>
     <GenerateManifests>true</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+	<SelfContained>True</SelfContained>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.22.0.997, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.ApplicationInsights.2.22.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.KeyVault, Version=3.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Azure.KeyVault.3.0.5\lib\net461\Microsoft.Azure.KeyVault.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.KeyVault.WebKey, Version=3.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Azure.KeyVault.WebKey.3.0.5\lib\net461\Microsoft.Azure.KeyVault.WebKey.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.Management.KeyVault, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Azure.Management.KeyVault.3.1.0\lib\net461\Microsoft.Azure.Management.KeyVault.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.3.0\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform">
-      <HintPath>$(PkgMicrosoft_IdentityModel_Clients_ActiveDirectory)\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Rest.ClientRuntime.2.3.24\lib\net461\Microsoft.Rest.ClientRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.19\lib\net461\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.Bson.1.0.3\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="ScintillaNET">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(Pkgjacobslusser_ScintillaNET_3_6_3)\lib\net40\ScintillaNET.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Diagnostics.DiagnosticSource.9.0.0\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Numerics.Vectors.4.6.0\lib\net462\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.6.0\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Http, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Windows">
-      <HintPath>$(MSBuildProgramFiles32)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Annotated\Windows.winmd</HintPath>
-    </Reference>
-  </ItemGroup>
-  <!-- 
-   Build ClearClipboard.csproj and copy the generated .exe as a dependent assembly all this to avoid ClickOnce
-   warning MSB3178: Assembly 'ClearClipboard.exe' is incorrectly specified as a file.
-  -->
-  <ItemGroup>
-    <ProjectReference Include="..\ClearClipboard\ClearClipboard.csproj">
-      <Project>{9b19162f-ff53-45c4-b849-e293db19d7aa}</Project>
-      <Name>ClearClipboard</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{b2f371e2-51e3-49dd-8568-3955242a6088}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Library\VaultLibrary.csproj">
-      <Project>{18150c6e-12e1-42d3-b7ae-740e96ebb59a}</Project>
-      <Name>VaultLibrary</Name>
-    </ProjectReference>
+    <PackageReference Include="fernandreu.ScintillaNET" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Azure.Management.KeyVault" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Desktop" Version="4.77.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.9" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivationUri.cs" />
-    <Compile Include="AddFileEventArgs.cs" />
-    <Compile Include="AutoClosingMessageBox.cs" />
-    <Compile Include="CustomTag.cs" />
-    <Compile Include="ISession.cs" />
-    <Compile Include="ItemDialogBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ItemDialogBase.Designer.cs">
-      <DependentUpon>ItemDialogBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ListViewItemCertificate.cs" />
-    <Compile Include="ContentType.cs" />
-    <Compile Include="DeleteTempFileInfo.cs" />
-    <Compile Include="ExceptionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ExceptionDialog.Designer.cs">
-      <DependentUpon>ExceptionDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FavoriteSecrets.cs" />
-    <Compile Include="ListViewItemBase.cs" />
-    <Compile Include="ListViewSecrets.cs">
+    <Compile Update="Controls\Lists\ListViewSecrets.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ListViewSecrets.Designer.cs">
-      <DependentUpon>ListViewSecrets.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NullableDateTimePickerEditor.cs" />
-    <Compile Include="PasswordDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PasswordDialog.Designer.cs">
-      <DependentUpon>PasswordDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CertificateValueObject.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="PropertyObject.cs" />
-    <Compile Include="PropertyObjectCertificate.cs" />
-    <Compile Include="CertificateDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CertificateDialog.Designer.cs">
-      <DependentUpon>CertificateDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SecretVersions.cs">
+    <Compile Update="Controls\MenuItems\CustomVersion.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SecretDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SecretDialog.Designer.cs">
-      <DependentUpon>SecretDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ObservableCollections.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="ReadOnlyPropertyDescriptor.cs" />
-    <Compile Include="SecretFile.cs" />
-    <Compile Include="SecretKind.cs">
+    <Compile Update="Controls\MenuItems\SecretKind.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ListViewItemSecret.cs" />
-    <Compile Include="PropertyObjectSecret.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="SettingsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingsDialog.Designer.cs">
-      <DependentUpon>SettingsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SubscriptionsManagerDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SubscriptionsManagerDialog.Designer.cs">
-      <DependentUpon>SubscriptionsManagerDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Telemetry.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="UxOperation.cs" />
-    <Compile Include="VaultAlias.cs" />
-    <EmbeddedResource Include="ExceptionDialog.resx">
-      <DependentUpon>ExceptionDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ItemDialogBase.resx">
-      <DependentUpon>ItemDialogBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ListViewSecrets.resx">
-      <DependentUpon>ListViewSecrets.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PasswordDialog.resx">
-      <DependentUpon>PasswordDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CertificateDialog.resx">
-      <DependentUpon>CertificateDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SecretDialog.resx">
-      <DependentUpon>SecretDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Include="SettingsDialog.resx">
-      <DependentUpon>SettingsDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SubscriptionsManagerDialog.resx">
-      <DependentUpon>SubscriptionsManagerDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <Content Include="$(AssemblyName).ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -357,80 +57,29 @@
     <Content Include="License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CustomTags.json">
+    <Content Include="Config\Templates\CustomTags.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="VaultAliases.json">
+    <Content Include="Config\Templates\VaultAliases.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SecretKinds.json">
+    <Content Include="Config\Templates\SecretKinds.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Vaults.json">
+    <Content Include="Config\Templates\Vaults.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <!--<Content Include="$(OutputPath)\$(AssemblyName).BuildInfo.config">
-      <Link>$(AssemblyName).BuildInfo.config</Link>
-      <Visible>False</Visible>
-    </Content>-->
-    <Content Include="VaultModule.psm1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Vault.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="ClickOnce.props" />
-    <None Include="CreateReleaseAnnotation.ps1" />
-    <None Include="Resources\BigKey.png" />
-    <None Include="Resources\cancel.png" />
-    <None Include="Resources\certificate.png" />
-    <None Include="Resources\certificate2.png" />
-    <None Include="Resources\certificate2_disabled.png" />
-    <None Include="Resources\disk.png" />
-    <None Include="Resources\door_out.png" />
-    <None Include="Resources\empty.png" />
-    <None Include="Resources\error.png" />
-    <None Include="Resources\folder_key.png" />
-    <None Include="Resources\group.png" />
-    <None Include="Resources\information.png" />
-    <None Include="Resources\key.png" />
-    <None Include="Resources\Key64x64.png" />
-    <None Include="Resources\key_delete.png" />
-    <None Include="Resources\link.png" />
-    <None Include="Resources\lock_add.png" />
-    <None Include="Resources\lock_break.png" />
-    <None Include="Resources\lock_delete.png" />
-    <None Include="Resources\lock_edit.png" />
-    <None Include="Resources\lock_go.png" />
-    <None Include="Resources\magnifier.png" />
-    <None Include="Resources\main_window.png" />
-    <None Include="Resources\medal_bronze_1.png" />
-    <None Include="Resources\medal_bronze_delete.png" />
-    <None Include="Resources\move_secret.cur" />
-    <None Include="Resources\move_value.cur" />
-    <None Include="Resources\move_link.cur" />
-    <None Include="Resources\page_copy.png" />
-    <None Include="Resources\star.png" />
-    <None Include="Resources\wrench.png" />
-    <None Include="Resources\table.png" />
-    <None Include="Resources\powershell.png" />
+    <ProjectReference Include="..\Library\VaultLibrary.csproj" />
+    <ProjectReference Include="..\ClearClipboard\ClearClipboard.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterCompile">
     <GetAssemblyIdentity AssemblyFiles="$(IntermediateOutputPath)$(TargetFileName)">
       <Output TaskParameter="Assemblies" ItemName="TargetAssemblyIdentity" />

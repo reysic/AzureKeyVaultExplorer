@@ -1,17 +1,17 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Library
 {
-    using Microsoft.Vault.Core;
     using System;
     using System.Text.RegularExpressions;
+    using Microsoft.Vault.Core;
 
     public enum VaultUriCollection
     {
         Keys,
         Secrets,
-        Certificates
+        Certificates,
     }
 
     public static class VaultCollectionUtils
@@ -34,11 +34,11 @@ namespace Microsoft.Vault.Library
 
     public enum Action
     {
-        Default
+        Default,
     }
 
     /// <summary>
-    /// Either https:// or vault:// uri to vault, vault/collection, vault/collcetion/item or vault/collcetion/item/version
+    ///     Either https:// or vault:// uri to vault, vault/collection, vault/collcetion/item or vault/collcetion/item/version
     /// </summary>
     public abstract class VaultUriBase : Uri
     {
@@ -57,31 +57,36 @@ namespace Microsoft.Vault.Library
             Guard.ArgumentNotNull(uriRegex, nameof(uriRegex));
             Guard.ArgumentNotNullOrEmptyString(uriString, nameof(uriString));
 
-            var m = uriRegex.Match(ToString());
+            var m = uriRegex.Match(this.ToString());
             if (false == m.Success)
             {
                 throw new ArgumentException($"Invalid vault URI {uriString}, URI must satisfy the following regex: {uriRegex}", nameof(uriString));
             }
-            VaultName = m.Groups["VaultName"].Value;
+
+            this.VaultName = m.Groups["VaultName"].Value;
             VaultUriCollection vuc;
             Enum.TryParse(m.Groups["Collection"].Value, true, out vuc);
-            Collection = vuc;
-            ItemName = m.Groups["Name"].Value;
-            Version = string.IsNullOrEmpty(m.Groups["Version"].Value) ? null : m.Groups["Version"].Value;
+            this.Collection = vuc;
+            this.ItemName = m.Groups["Name"].Value;
+            this.Version = string.IsNullOrEmpty(m.Groups["Version"].Value) ? null : m.Groups["Version"].Value;
         }
 
-        public string VaultLink => $"vault://{VaultName}/{Collection.ToCollectionName()}/{ItemName}/{Version}".TrimEnd('/');
+        public string VaultLink => $"vault://{this.VaultName}/{this.Collection.ToCollectionName()}/{this.ItemName}/{this.Version}".TrimEnd('/');
 
-        public string HttpsLink => $"https://{VaultName}.vault.azure.net:443/{Collection.ToCollectionName()}/{ItemName}/{Version}".TrimEnd('/');
+        public string HttpsLink => $"https://{this.VaultName}.vault.azure.net:443/{this.Collection.ToCollectionName()}/{this.ItemName}/{this.Version}".TrimEnd('/');
     }
 
     public class VaultHttpsUri : VaultUriBase
     {
-        public VaultHttpsUri(string httpsUriString) : base(Consts.ValidVaultItemHttpsUriRegex, httpsUriString) { }
+        public VaultHttpsUri(string httpsUriString) : base(Consts.ValidVaultItemHttpsUriRegex, httpsUriString)
+        {
+        }
     }
 
     public class VaultLinkUri : VaultUriBase
     {
-        public VaultLinkUri(string vaultUriString) : base(Consts.ValidVaultItemVaultUriRegex, vaultUriString) { }
+        public VaultLinkUri(string vaultUriString) : base(Consts.ValidVaultItemVaultUriRegex, vaultUriString)
+        {
+        }
     }
 }

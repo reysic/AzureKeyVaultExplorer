@@ -1,14 +1,14 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Library
 {
-    using Microsoft.Vault.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using Microsoft.Vault.Core;
 
     public static class Utils
     {
@@ -28,15 +28,17 @@ namespace Microsoft.Vault.Library
             {
                 tags[Consts.Md5Key] = CalculateMd5(value);
             }
+
             return new Dictionary<string, string>(tags);
         }
 
         public static string GetChangedBy(IDictionary<string, string> tags)
         {
-            if ((tags == null) || (!tags.ContainsKey(Consts.ChangedByKey)))
+            if (tags == null || !tags.ContainsKey(Consts.ChangedByKey))
             {
                 return "";
             }
+
             return tags[Consts.ChangedByKey];
         }
 
@@ -52,15 +54,16 @@ namespace Microsoft.Vault.Library
 
         public static string GetMd5(IDictionary<string, string> tags)
         {
-            if ((tags == null) || (!tags.ContainsKey(Consts.Md5Key)))
+            if (tags == null || !tags.ContainsKey(Consts.Md5Key))
             {
                 return "";
             }
+
             return tags[Consts.Md5Key];
         }
 
         /// <summary>
-        /// Return True if this is Debug build, otherwise False
+        ///     Return True if this is Debug build, otherwise False
         /// </summary>
         public static bool IsDebug
         {
@@ -77,7 +80,7 @@ namespace Microsoft.Vault.Library
         #region IList and IEnumerable Extensions
 
         /// <summary>
-        /// Returns a random element from a list, or null if the list is empty.
+        ///     Returns a random element from a list, or null if the list is empty.
         /// </summary>
         /// <typeparam name="T">The type of object being enumerated</typeparam>
         /// <param name="rand">An instance of a random number generator</param>
@@ -85,12 +88,15 @@ namespace Microsoft.Vault.Library
         public static T Random<T>(this IEnumerable<T> list, CryptoRandomGenerator rand)
         {
             if (list != null && list.Count() > 0)
+            {
                 return list.ElementAt(rand.Next(list.Count()));
+            }
+
             return default(T);
         }
 
         /// <summary>
-        /// Returns a shuffled IEnumerable.
+        ///     Returns a shuffled IEnumerable.
         /// </summary>
         /// <typeparam name="T">The type of object being enumerated</typeparam>
         /// <returns>A shuffled shallow copy of the source items</returns>
@@ -100,7 +106,7 @@ namespace Microsoft.Vault.Library
         }
 
         /// <summary>
-        /// Returns a shuffled IEnumerable.
+        ///     Returns a shuffled IEnumerable.
         /// </summary>
         /// <typeparam name="T">The type of object being enumerated</typeparam>
         /// <param name="rand">An instance of a random number generator</param>
@@ -113,7 +119,7 @@ namespace Microsoft.Vault.Library
         }
 
         /// <summary>
-        /// Shuffles an IList in place.
+        ///     Shuffles an IList in place.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list</typeparam>
         public static void Shuffle<T>(this IList<T> list)
@@ -122,7 +128,7 @@ namespace Microsoft.Vault.Library
         }
 
         /// <summary>
-        /// Shuffles an IList in place.
+        ///     Shuffles an IList in place.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list</typeparam>
         /// <param name="rand">An instance of a random number generator</param>

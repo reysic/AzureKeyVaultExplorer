@@ -16,7 +16,7 @@
     </Compile>
     <T4Compile Include="$(MSBuildThisFileDirectory)\AssemblyInfo.cs.t4">
       <T4OutputFile>$(IntermediateOutputPath)\AssemblyInfo.cs</T4OutputFile>
-      <T4AdditionalOptions>/p AssemblyTitle="$(AssemblyName)" /p AssemblyDescription="$(AssemblyDescription)" /p AssemblyFileVersionOnly="$(AutoVersioningFileOnly)"</T4AdditionalOptions>
+      <T4AdditionalOptions>/p AssemblyTitle="$(ProductName)" /p AssemblyCompany="$(AssemblyCompany)" /p AssemblyDescription="$(AssemblyDescription)" /p AssemblyFileVersionOnly="$(AutoVersioningFileOnly)"</T4AdditionalOptions>
       <!-- Make sure output is always generated -->
       <T4ForceOutput>true</T4ForceOutput>
     </T4Compile>

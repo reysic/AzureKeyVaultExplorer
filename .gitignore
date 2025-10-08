@@ -12,3 +12,5 @@ msbuild.log
 *.tmp
 ~*.docx
 ~*.xlsx
+/browser_extensions/
+/Vault/Explorer/Properties/launchSettings.json

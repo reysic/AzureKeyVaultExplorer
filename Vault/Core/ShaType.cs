@@ -1,5 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
-// Licensed under the MIT License. See License.txt in the project root for license information. 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 namespace Microsoft.Vault.Core
 {
@@ -7,6 +7,6 @@ namespace Microsoft.Vault.Core
     {
         Sha1,
 
-        Sha256
+        Sha256,
     }
 }
