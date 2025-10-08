@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="VaultExplorer.exe" version="2025.102.2006.30" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" type="win32" />
+  <asmv1:assemblyIdentity name="VaultExplorer.exe" version="2025.1008.1434.33" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" type="win32" />
   <description asmv2:iconFile="VaultExplorer.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="VaultExplorer" version="2025.102.2006.30" language="neutral" processorArchitecture="amd64" />
+    <assemblyIdentity name="VaultExplorer" version="2025.1008.1434.33" language="neutral" processorArchitecture="amd64" />
     <commandLine file="VaultExplorer.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -50,7 +50,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mZAr0PrD/eSdOHxV4/mDpGjliXgfzzXZ5RN1fLczBPA=</dsig:DigestValue>
+        <dsig:DigestValue>nfjBlP2w0LZN+LLeG/kNHANNTm9P/aUoOI/dIzKRWvY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -146,19 +146,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6AinxGXONo7v6QmdN27ZHlJlyMm40HEOSydNVc1oYXQ=</dsig:DigestValue>
+        <dsig:DigestValue>j0+5pmOg3zI1Ml5zy9qO9ByXxzfz3Xckdfa6sXBqvHk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.Vault.Library.dll" size="49152">
-      <assemblyIdentity name="Microsoft.Vault.Library" version="2025.102.2006.30" language="neutral" processorArchitecture="amd64" />
+      <assemblyIdentity name="Microsoft.Vault.Library" version="2025.1008.1434.33" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>GrDOafa/gpfNHWKBwWy4VMd0hx0Ad1O+E37bit9tkkI=</dsig:DigestValue>
+        <dsig:DigestValue>DZe/LaepJZxzuQL9wRWBc2X5qKkgqQtKoxDYtzwfHv0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -295,14 +295,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VaultExplorer.exe" size="565248">
-      <assemblyIdentity name="VaultExplorer" version="2025.102.2006.30" language="neutral" processorArchitecture="amd64" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VaultExplorer.exe" size="565760">
+      <assemblyIdentity name="VaultExplorer" version="2025.1008.1434.33" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>3IV20KDfyOEa5xoQuDE0yDYJ+5h7RX5IgFvq1Ztoxig=</dsig:DigestValue>
+        <dsig:DigestValue>zpp1SsRfsjudSxpj2Ekw282v8V3Jme62gWyyDJlubo4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
