@@ -1,50 +1,13 @@
-# ![bigKey](./Screenshots/keyvault_logo_main_48.png) Azure Key Vault Explorer
+# ![bigKey](./Screenshots/Key64x64.png) Azure Key Vault Explorer
 
-**NOTE: This is a fork of a [fork](https://github.com/reysic/AzureKeyVaultExplorer) of the original project located at [AzureKeyVaultExplorer](https://github.com/microsoft/AzureKeyVaultExplorer).**
+**NOTE: This is a fork of the original project located at [https://github.com/microsoft/AzureKeyVaultExplorer](https://github.com/microsoft/AzureKeyVaultExplorer). This fork is not maintained by, or affiliated with, Microsoft, and was created to allow for continued development of the tool by the community.**
 
+Azure Key Vault Explorer - be productive when working with secrets!
 
-**[Click here to install the latest version (https://softworkz.github.io/AzureKeyVaultExplorer)](https://softworkz.github.io/AzureKeyVaultExplorer)**
+**[Click here to install the latest version (https://reysic.github.io/AzureKeyVaultExplorer)](https://reysic.github.io/AzureKeyVaultExplorer)**
 
-### NEW in the latest Version: ZERO-Config URL Activation
-
-More Information: https://github.com/softworkz/AzureKeyVaultExplorer/releases/tag/v2025.0718.1519.37
-
-## New in this Fork
-
-- Updated to .NET 8 and SDK-style projects with PackageReference
-- Updated authentication from ADAL.NET (deprecated) to Microsoft.Identity.Client (MSAL v4)
-- Removed Telemetry
-- Removed all nuget and other unnecessary scripting
-- Removed PowerShell interface
-  (doesn't work with .net 8; there are official PS modules now)
-- Move all URL strings to a global class
-- All code restructured and reformatted
-- Set up ClickOnce deployment in the net5+ way
-- Remove obsolete settings
-  ("Disable telemetry", Authority, GmeAuthority)
-- **Bug Fixes**
-  - SettingsDialog: Fixed exception when clicking on "User settings location..." after a fresh install
-  - Un-genericalize base forms
-  - Fix launch from ClickOnce URL activation
-  - Fix settings getting lost on update
-- **New Features**
-  - **Zero-Config Start**  
-    No need to prepare json files or enter account names in settings
-  - **Vaults picked from subscription can be saved**  
-    Select vaults from your Azure subscriptions
-  - Existing json configs are still working
-  - **Authentication via OS browser**  
-    instead of embedded window - entering passwords less often
-  - Applied some UI Casmetics
-  - Reduce label column width in PropertyGrids
-  - Add version to PropertyGrid in Secrets dialog
-
----
-
-#### Azure Key Vault Explorer - be productive when working with secrets!
-
-
-Original authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin  
+Original Authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin
+Current Authors: reysic, softworkz
 Contact: Submit issues/PRs on this repo
 
 ## Table of Contents
@@ -74,7 +37,7 @@ Contact: Submit issues/PRs on this repo
 
 * Best user experience for authentication, you will be prompted at most *once* to enter your credentials
 * All types of authentications are supported: Certificate, Secret and User based with 2FA (including PHX or GME)
-* One click activation, just run this: `https://srnk.cc/ve?vault://[ENTER HERE YOUR VAULT NAME]`
+* One click activation, just run this: `https://reysic.github.io/AzureKeyVaultExplorer?vault://[ENTER HERE YOUR VAULT NAME]`
 * Support single or dual vaults
 * Upload and download certificate (.pfx, .p12 and .cer) files
 * Import and export certificates to user or machine stores in just few clicks
@@ -105,7 +68,7 @@ Contact: Submit issues/PRs on this repo
 
 There are 4 ways how you can make Vault Explorer to work with your vaults:
 
-1. In case Vault Explorer is not installed on the box, you may just run: `https://srnk.cc/ve?vault://[ENTER HERE YOUR VAULT NAME]`
+1. In case Vault Explorer is not installed on the box, you may just run: reysic.github.io/AzureKeyVaultExplorer?vault://[ENTER HERE YOUR VAULT NAME]`
 2. In case Vault Explorer already installed on the box, you can just hit Win+R type `vault://[ENTER HERE YOUR VAULT NAME]` and hit Enter
     * Note: The above two methods do **NOT** allow for alternative account login  
 3. Run Vault Explorer, open vault combo box, select last item "Pick vault from subscription..."  
@@ -132,7 +95,7 @@ Just complete the below fairly easy manual steps *once*:
 * Enter - edit item
 * Ctrl + A - select all items
 * Ctrl + C - copy item value to clipboard for some time (configurable)
-* Ctrl + Shift + C - copy link to the selected item in the following format: `https://srnk.cc/ve?vault://vaultName/collection/itemName/version`
+* Ctrl + Shift + C - copy link to the selected item in the following format: `https://reysic.github.io/AzureKeyVaultExplorer?vault://vaultName/collection/itemName/version`
 * Ctrl + D - add item to favorites / remove item from favorites
 * Ctrl + E - edit item
 * Ctrl + F - find items
@@ -336,13 +299,18 @@ Telemetry can be disabled in the Settings dialog. Set *Disable telemetry* to *Tr
 
 ## Contributing
 
+### Building
+
 This project has been tested with Visual Studio 2022 and .NET Framework 4.8. To build locally:
 
 * Clone this repo
-* Run `.\init.cmd` from the repo root to install NuGet packages
 * Build and run
 
 PRs are welcome!
+
+### Publishing
+
+See [release.md](https://github.com/reysic/AzureKeyVaultExplorer/blob/c6c5153fc071ef74d306dff636df2f432d6dc27e/release.md). Following that process automatically triggers a couple of [Actions](https://github.com/reysic/AzureKeyVaultExplorer/actions), which run [release.ps1](https://github.com/reysic/AzureKeyVaultExplorer/blob/c6c5153fc071ef74d306dff636df2f432d6dc27e/release.ps1).
 
 ### TODOs
 
@@ -359,3 +327,33 @@ PRs are welcome!
   * Configure ClickOnce deployments for future releases - :white_check_mark:
 * Improve onboarding
   * Better error messaging if user hasn't configured subscription dialog values
+
+#### softworkz Updates
+
+- Updated to .NET 8 and SDK-style projects with PackageReference
+- Updated authentication from ADAL.NET (deprecated) to Microsoft.Identity.Client (MSAL v4)
+- Removed Telemetry
+- Removed all nuget and other unnecessary scripting
+- Removed PowerShell interface
+  (doesn't work with .net 8; there are official PS modules now)
+- Move all URL strings to a global class
+- All code restructured and reformatted
+- Set up ClickOnce deployment in the net5+ way
+- Remove obsolete settings
+  ("Disable telemetry", Authority, GmeAuthority)
+- **Bug Fixes**
+  - SettingsDialog: Fixed exception when clicking on "User settings location..." after a fresh install
+  - Un-genericalize base forms
+  - Fix launch from ClickOnce URL activation
+  - Fix settings getting lost on update
+- **New Features**
+  - **Zero-Config Start**  
+    No need to prepare json files or enter account names in settings
+  - **Vaults picked from subscription can be saved**  
+    Select vaults from your Azure subscriptions
+  - Existing json configs are still working
+  - **Authentication via OS browser**  
+    instead of embedded window - entering passwords less often
+  - Applied some UI Casmetics
+  - Reduce label column width in PropertyGrids
+  - Add version to PropertyGrid in Secrets dialog
