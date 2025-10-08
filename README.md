@@ -4,7 +4,7 @@
 
 Azure Key Vault Explorer - be productive when working with secrets!
 
-**[Click here to install the latest version (https://srnk.cc/ve)](https://srnk.cc/ve)**
+**[Click here to install the latest version (https://reysic.github.io/AzureKeyVaultExplorer)](https://reysic.github.io/AzureKeyVaultExplorer)**
 
 Authors: Eli Zeitlin, Gokhan Ozhan, Anna Zeitlin  
 Contact: Submit issues/PRs on this repo
@@ -36,7 +36,7 @@ Contact: Submit issues/PRs on this repo
 
 * Best user experience for authentication, you will be prompted at most *once* to enter your credentials
 * All types of authentications are supported: Certificate, Secret and User based with 2FA (including PHX or GME)
-* One click activation, just run this: `https://srnk.cc/ve?vault://[ENTER HERE YOUR VAULT NAME]`
+* One click activation, just run this: `https://reysic.github.io/AzureKeyVaultExplorer?vault://[ENTER HERE YOUR VAULT NAME]`
 * Support single or dual vaults
 * Upload and download certificate (.pfx, .p12 and .cer) files
 * Import and export certificates to user or machine stores in just few clicks
@@ -67,7 +67,7 @@ Contact: Submit issues/PRs on this repo
 
 There are 4 ways how you can make Vault Explorer to work with your vaults:
 
-1. In case Vault Explorer is not installed on the box, you may just run: `https://srnk.cc/ve?vault://[ENTER HERE YOUR VAULT NAME]`
+1. In case Vault Explorer is not installed on the box, you may just run: reysic.github.io/AzureKeyVaultExplorer?vault://[ENTER HERE YOUR VAULT NAME]`
 2. In case Vault Explorer already installed on the box, you can just hit Win+R type `vault://[ENTER HERE YOUR VAULT NAME]` and hit Enter
     * Note: The above two methods do **NOT** allow for alternative account login  
 3. Run Vault Explorer, open vault combo box, select last item "Pick vault from subscription..."  
@@ -94,7 +94,7 @@ Just complete the below fairly easy manual steps *once*:
 * Enter - edit item
 * Ctrl + A - select all items
 * Ctrl + C - copy item value to clipboard for some time (configurable)
-* Ctrl + Shift + C - copy link to the selected item in the following format: `https://srnk.cc/ve?vault://vaultName/collection/itemName/version`
+* Ctrl + Shift + C - copy link to the selected item in the following format: `https://reysic.github.io/AzureKeyVaultExplorer?vault://vaultName/collection/itemName/version`
 * Ctrl + D - add item to favorites / remove item from favorites
 * Ctrl + E - edit item
 * Ctrl + F - find items
@@ -298,6 +298,8 @@ Telemetry can be disabled in the Settings dialog. Set *Disable telemetry* to *Tr
 
 ## Contributing
 
+### Building
+
 This project has been tested with Visual Studio 2022 and .NET Framework 4.8. To build locally:
 
 * Clone this repo
@@ -305,6 +307,10 @@ This project has been tested with Visual Studio 2022 and .NET Framework 4.8. To 
 * Build and run
 
 PRs are welcome!
+
+### Publishing
+
+See [release.md](https://github.com/reysic/AzureKeyVaultExplorer/blob/c6c5153fc071ef74d306dff636df2f432d6dc27e/release.md). Following that process automatically triggers a couple of [Actions](https://github.com/reysic/AzureKeyVaultExplorer/actions), which run [release.ps1](https://github.com/reysic/AzureKeyVaultExplorer/blob/c6c5153fc071ef74d306dff636df2f432d6dc27e/release.ps1).
 
 ### TODOs
 
