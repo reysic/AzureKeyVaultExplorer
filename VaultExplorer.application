@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xrml="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <assemblyIdentity name="VaultExplorer.application" version="2025.1008.1434.33" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <assemblyIdentity name="VaultExplorer.application" version="2025.1008.2111.40" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <description asmv2:publisher="VaultExplorer" asmv2:product="VaultExplorer" asmv2:supportUrl="https://github.com/reysic/AzureKeyVaultExplorer/issues" co.v1:errorReportUrl="https://github.com/reysic/AzureKeyVaultExplorer/issues" xmlns="urn:schemas-microsoft-com:asm.v1" />
-  <deployment install="true" mapFileExtensions="true">
+  <deployment install="true" mapFileExtensions="true" trustURLParameters="true">
     <subscription>
       <update>
         <beforeApplicationStartup />
@@ -11,17 +11,17 @@
     <deploymentProvider codebase="https://reysic.github.io/AzureKeyVaultExplorer/VaultExplorer.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
-    <framework targetVersion="4.8" profile="Full" supportedRuntime="4.0.30319" />
+    <framework targetVersion="4.5" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Application Files\VaultExplorer_2025_1008_1434_33\VaultExplorer.exe.manifest" size="22898">
-      <assemblyIdentity name="VaultExplorer.exe" version="2025.1008.1434.33" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" type="win32" />
+    <dependentAssembly dependencyType="install" codebase="Application Files\VaultExplorer_2025_1008_2111_40\VaultExplorer.dll.manifest" size="209337">
+      <assemblyIdentity name="VaultExplorer.exe" version="2025.1008.2111.40" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>tgJaZvyyx5YBBrDOoK7gWzdfl/eI2SMSUqIZYkDc/tg=</dsig:DigestValue>
+        <dsig:DigestValue>Hp70k+oX8pYsLptThQQ3GfdjiR0hAYp1XbFk+tqauhQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
