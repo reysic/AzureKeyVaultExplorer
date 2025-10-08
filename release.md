@@ -2,16 +2,10 @@
 
 ## Steps
 
-1. Generate a formatted git tag from the desired state of `main` by using the `tag.ps1` script in the root of this repo:
+1. Generate a formatted git tag from the desired state of `main` and push it to GitHub by using the `tag_and_push.ps1` script in the root of this repo:
 
    ```text
-   .\tag.ps1
+   .\tag_and_push.ps1
    ```
 
-2. Push the tag to GitHub:
-
-   ```text
-   git push origin: <tag>
-   ```
-
-3. Generate release on GitHub via UI, referencing tag
+2. Generate release on GitHub via UI, referencing [tag](https://github.com/reysic/AzureKeyVaultExplorer/tags).
