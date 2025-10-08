@@ -67,7 +67,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("<#= AssemblyDescription #>")]
 [assembly: AssemblyCompany("<#= AssemblyCompany #>")]
 [assembly: AssemblyProduct("<#= AssemblyTitle #>")]
-[assembly: AssemblyCopyright("(c) softworkz & Microsoft Corporation. All rights reserved.")]
+[assembly: AssemblyCopyright("(c) Microsoft Corporation. All rights reserved.")]
 <# if (assemblyFileVersionOnly) { #>
 [assembly: AssemblyFileVersion("<#= string.Format("{0:yyyy}.{0:MMdd}.{0:HHmm}.{0:ss}", commitDateUTC) #>")]
 <# } else { #>
