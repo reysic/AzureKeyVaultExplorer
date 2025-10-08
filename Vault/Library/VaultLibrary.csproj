@@ -18,9 +18,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.5" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.73.1" />
-    <PackageReference Include="Microsoft.Identity.Client.Desktop" Version="4.73.1" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Desktop" Version="4.77.1" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
